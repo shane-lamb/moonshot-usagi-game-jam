@@ -39,11 +39,23 @@ function _init()
         x = MAX_X,
         y = MID_Y,
         dir = -1,
-        type = TYPE_ENEMY
+        type = TYPE_ENEMY,
+        shoot_timer = 0
       }
     },
     bullets = {}
   }
+end
+
+local function shoot_bullet(entity)
+    table.insert(State.bullets, {
+      x = entity.x + entity.dir * HALF_SPRITE_SIZE,
+      y = entity.y,
+      time_left = BULLET_LIFETIME,
+      dir = entity.dir,
+      type = TYPE_BULLET,
+      hurt_enemy = entity.type == TYPE_PLAYER
+    })
 end
 
 local function update_player(dt)
@@ -66,13 +78,7 @@ local function update_player(dt)
   State.player.y = util.clamp(State.player.y, MIN_Y, MAX_Y)
 
   if input.pressed(input.BTN1) then
-    table.insert(State.bullets, {
-      x = State.player.x + State.player.dir * HALF_SPRITE_SIZE,
-      y = State.player.y,
-      time_left = BULLET_LIFETIME,
-      dir = State.player.dir,
-      type = TYPE_BULLET
-    })
+    shoot_bullet(State.player)
   end
 end
 
@@ -87,13 +93,25 @@ local function update_bullet(bullet, dt)
   -- damage entity if bullet collided
   local bullet_point = { x = bullet.x + HALF_SPRITE_SIZE, y = bullet.y + HALF_SPRITE_SIZE }
   local target_rect = { w = HALF_SPRITE_SIZE, h = HALF_SPRITE_SIZE }
-  for _, enemy in ipairs(State.enemies) do
-    target_rect.x = enemy.x + QUARTER_SPRITE_SIZE
-    target_rect.y = enemy.y + QUARTER_SPRITE_SIZE
-    if util.point_in_rect(bullet_point, target_rect) then
-      enemy.hit = true
-      return true
+
+  if bullet.hurt_enemy then
+    for _, enemy in ipairs(State.enemies) do
+      target_rect.x = enemy.x + QUARTER_SPRITE_SIZE
+      target_rect.y = enemy.y + QUARTER_SPRITE_SIZE
+      if util.point_in_rect(bullet_point, target_rect) then
+        enemy.hit = true
+        return true
+      end
     end
+    return
+  end
+
+  -- bullet is targetted at player
+  target_rect.x = State.player.x + QUARTER_SPRITE_SIZE
+  target_rect.y = State.player.y + QUARTER_SPRITE_SIZE
+  if util.point_in_rect(bullet_point, target_rect) then
+    -- player hit!
+    return true
   end
 end
 
@@ -109,6 +127,21 @@ end
 local function update_enemy(enemy, dt)
   if (enemy.hit) then
     return true
+  end
+  
+  enemy.shoot_timer -= dt
+
+  if (enemy.shoot_timer < 0) then
+    shoot_bullet(enemy)
+    enemy.shoot_timer = 3.5
+  end
+
+  -- turn to face player
+  local x_diff = State.player.x - enemy.x
+  if (x_diff > 0) then
+    enemy.dir = 1
+  else
+    enemy.dir = -1
   end
 end
 
