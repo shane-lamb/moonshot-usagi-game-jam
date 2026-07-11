@@ -4,10 +4,11 @@ QUARTER_SPRITE_SIZE = HALF_SPRITE_SIZE / 2
 GAME_HEIGHT = 90
 GAME_WIDTH = 160
 MIN_X = 0
-MAX_Y = GAME_HEIGHT - SPRITE_SIZE
-MIN_Y = 16
-MID_Y = MIN_Y + (MAX_Y - MIN_Y) / 2
 MAX_X = GAME_WIDTH - SPRITE_SIZE
+MID_X = MIN_X + (MAX_X - MIN_X) / 2
+MIN_Y = 16
+MAX_Y = GAME_HEIGHT - SPRITE_SIZE
+MID_Y = MIN_Y + (MAX_Y - MIN_Y) / 2
 
 TYPE_PLAYER = 0
 TYPE_ENEMY = 1
@@ -15,8 +16,16 @@ TYPE_BULLET = 2
 
 PLAYER_SPEED = 30
 
+ENEMY_SPEED = 20
+ENEMY_RELOAD_TIME = 1.3
+ENEMY_RUN_FROM_PLAYER_DISTANCE = 50
+ENEMY_MIN_MOVE_TIME = 0.5 -- max move time is this plus 1 second
+
 BULLET_SPEED = PLAYER_SPEED * 2
 BULLET_LIFETIME = 2.5
+
+SPAWNER_INITIAL_DELAY = 0.5
+SPAWNER_DELAY = 2
 
 function _config()
   ---@type Usagi.Config
@@ -29,33 +38,53 @@ function _init()
   -- survives reloads; F5 calls _init again to reset.
   State = {
     player = {
-      x = 0,
+      x = MID_X,
       y = MID_Y,
       dir = 1,
       type = TYPE_PLAYER
     },
-    enemies = {
-      {
-        x = MAX_X,
-        y = MID_Y,
-        dir = -1,
-        type = TYPE_ENEMY,
-        shoot_timer = 0
-      }
-    },
-    bullets = {}
+    enemies = {},
+    bullets = {},
+    spawn_timer = SPAWNER_INITIAL_DELAY
   }
 end
 
 local function shoot_bullet(entity)
-    table.insert(State.bullets, {
-      x = entity.x + entity.dir * HALF_SPRITE_SIZE,
-      y = entity.y,
-      time_left = BULLET_LIFETIME,
-      dir = entity.dir,
-      type = TYPE_BULLET,
-      hurt_enemy = entity.type == TYPE_PLAYER
-    })
+  table.insert(State.bullets, {
+    x = entity.x + entity.dir * HALF_SPRITE_SIZE,
+    y = entity.y,
+    time_left = BULLET_LIFETIME,
+    dir = entity.dir,
+    type = TYPE_BULLET,
+    hurt_enemy = entity.type == TYPE_PLAYER
+  })
+end
+
+local function update_spawner(dt)
+  State.spawn_timer -= dt
+  
+  if State.spawn_timer > 0 then
+    return
+  end
+
+  -- 50% chance of spawning on left or right edge of screen
+  local x = MIN_X
+  if math.random() < 0.5 then
+    x = MAX_X
+  end
+
+  table.insert(State.enemies, {
+    x = x,
+    y = math.random(MIN_Y, MAX_Y),
+    dir = -1,
+    type = TYPE_ENEMY,
+    shoot_timer = 0.5 + math.random() / 2,
+    move_timer = 0,
+    move_x = 0,
+    move_y = 0
+  })
+  
+  State.spawn_timer = SPAWNER_DELAY
 end
 
 local function update_player(dt)
@@ -129,19 +158,42 @@ local function update_enemy(enemy, dt)
     return true
   end
   
-  enemy.shoot_timer -= dt
+  enemy.move_timer -= dt
 
-  if (enemy.shoot_timer < 0) then
-    shoot_bullet(enemy)
-    enemy.shoot_timer = 3.5
+  local x_diff = State.player.x - enemy.x
+
+  if (enemy.move_timer < 0) then
+    local y_diff = State.player.y - enemy.y
+    local x_diff_mag = math.abs(x_diff)
+
+    -- move towards the player vertically
+    enemy.move_y = (y_diff > 0 and 1 or -1) * ENEMY_SPEED
+
+    -- face and move towards the player horizontally...
+    enemy.dir = x_diff > 0 and 1 or -1
+    -- ...except if "too close" to the player, then run away instead
+    if (x_diff_mag < ENEMY_RUN_FROM_PLAYER_DISTANCE) then
+      enemy.dir *= -1
+    end
+    enemy.move_x = enemy.dir * ENEMY_SPEED
+
+    enemy.move_timer = ENEMY_MIN_MOVE_TIME + math.random()
   end
 
-  -- turn to face player
-  local x_diff = State.player.x - enemy.x
-  if (x_diff > 0) then
-    enemy.dir = 1
-  else
-    enemy.dir = -1
+  enemy.x += enemy.move_x * dt
+  enemy.y += enemy.move_y * dt
+  enemy.y = util.clamp(enemy.y, MIN_Y, MAX_Y)
+  enemy.x = util.clamp(enemy.x, MIN_X, MAX_X)
+
+  local facing_player = (x_diff > 0) == (enemy.dir > 0)
+  -- since shoot timer only decreases when facing player,
+  -- enemy will never waste a shot shooting away from the player
+  if facing_player then
+    enemy.shoot_timer -= dt
+  end
+  if enemy.shoot_timer < 0 then
+    shoot_bullet(enemy)
+    enemy.shoot_timer = ENEMY_RELOAD_TIME
   end
 end
 
@@ -155,8 +207,9 @@ local function update_enemies(dt)
 end
 
 function _update(dt)
-  update_player(dt)
+  update_spawner(dt)
   update_bullets(dt)
+  update_player(dt)
   update_enemies(dt)
 end
 
