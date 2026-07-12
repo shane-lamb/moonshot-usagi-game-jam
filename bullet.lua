@@ -37,7 +37,7 @@ local function update_bullet(bullet, dt)
   target_rect.x = State.player.x + QUARTER_SPRITE_SIZE
   target_rect.y = State.player.y + QUARTER_SPRITE_SIZE
   if util.point_in_rect(bullet_point, target_rect) then
-    -- player hit!
+    State.scene_to_init = SCENE_GAME_OVER
     return true
   end
 end
