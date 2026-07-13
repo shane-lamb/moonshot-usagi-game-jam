@@ -3,7 +3,8 @@ require "constants"
 local scenes = {
   [SCENE_INTRO] = require "scene_intro",
   [SCENE_IN_GAME] = require "scene_in_game",
-  [SCENE_GAME_OVER] = require "scene_game_over"
+  [SCENE_GAME_OVER] = require "scene_game_over",
+  [SCENE_WIN] = require "scene_win"
 }
 
 function _config()

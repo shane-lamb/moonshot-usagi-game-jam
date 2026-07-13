@@ -13,6 +13,7 @@ MID_Y = MIN_Y + (MAX_Y - MIN_Y) / 2
 SCENE_INTRO = 0
 SCENE_IN_GAME = 1
 SCENE_GAME_OVER = 2
+SCENE_WIN = 3
 
 TYPE_PLAYER = 0
 TYPE_ENEMY = 1
@@ -37,3 +38,4 @@ SFX_HIT = "hit"
 SFX_SHOOT = "shoot"
 SFX_WAVE_START = "wave_start"
 SFX_BEEP = "beep"
+SFX_WIN = "win"

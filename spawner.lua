@@ -70,7 +70,7 @@ local function update_wave(spawner)
   if spawner.step > #wave.steps then
     if #State.enemies == 0 then
       if spawner.wave == #waves then
-        State.scene_to_init = SCENE_INTRO -- TODO
+        State.scene_to_init = SCENE_WIN
         return
       end
       spawner.intermission = true
