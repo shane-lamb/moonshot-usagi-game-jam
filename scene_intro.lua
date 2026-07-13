@@ -2,7 +2,7 @@ local util = require "util"
 
 local function init()
   State = {
-    timer = 1.5
+    timer = 2.5
   }
 end
 
@@ -18,15 +18,17 @@ local function update(dt)
 end
 
 local function draw()
-  gfx.clear(gfx.COLOR_RED)
+  gfx.clear(gfx.COLOR_BLACK)
 
-  local text = { "YOU BITE THE MOON DUST" }
+  local text = { "MOONSHOT", "", "Moon robots are mean -", "but you are keen", "",  ""}
   if (State.timer < 0) then
-    text[#text + 1] = ""
-    text[#text + 1] = "Press button 1"
+    text[#text] = "Press button 1"
   end
 
   util.text_multiline_center(text, gfx.COLOR_WHITE)
+
+  gfx.spr(1, 35, 14)
+  gfx.spr(1, 106, 14)
 end
 
 return {

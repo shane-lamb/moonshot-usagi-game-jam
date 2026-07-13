@@ -1,6 +1,7 @@
 require "constants"
 
 local scenes = {
+  [SCENE_INTRO] = require "scene_intro",
   [SCENE_IN_GAME] = require "scene_in_game",
   [SCENE_GAME_OVER] = require "scene_game_over"
 }
@@ -15,7 +16,7 @@ function _init()
   -- Stash mutable game state in a capitalized global like `State` so it
   -- survives reloads; F5 calls _init again to reset.
   State = {
-    scene_to_init = SCENE_IN_GAME
+    scene_to_init = SCENE_INTRO
   }
 end
 
