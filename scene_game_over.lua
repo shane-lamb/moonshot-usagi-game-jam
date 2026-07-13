@@ -20,7 +20,7 @@ end
 local function draw()
   gfx.clear(gfx.COLOR_RED)
 
-  local text = { "YOU BITE THE MOON DUST" }
+  local text = { "YOU BIT THE MOON DUST" }
   if (State.timer < 0) then
     text[#text + 1] = ""
     text[#text + 1] = "Press button 1"
