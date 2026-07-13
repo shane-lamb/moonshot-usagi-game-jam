@@ -16,8 +16,17 @@ local function text_multiline_center(text_lines, color)
   end
 end
 
+local function should_show_flash_text(initial_wait, time_elapsed)
+  local time = time_elapsed - initial_wait
+  if time < 0 then
+    return false
+  end
+  return time % FLASH_TEXT_TIME * 2 < FLASH_TEXT_TIME
+end
+
 return {
   text_center_horizontal = text_center_horizontal,
   text_center = text_center,
-  text_multiline_center = text_multiline_center
+  text_multiline_center = text_multiline_center,
+  should_show_flash_text = should_show_flash_text
 }
