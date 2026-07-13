@@ -20,9 +20,9 @@ local waves = {
   },
   {
     steps = {
-      { side = SIDE_BOTH, count = 4, delay = 0.6 },
+      { side = SIDE_BOTH, count = 4, delay = 0.7 },
       { delay = 6.0 },
-      { side = SIDE_RANDOM, count = 15, delay = 0.6 }
+      { side = SIDE_RANDOM, count = 15, delay = 0.7 }
     }
   }
 }
