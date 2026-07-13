@@ -8,10 +8,11 @@ local function update_enemy(enemy, dt)
 
   enemy.move_timer -= dt
 
-  local x_diff = State.player.x - enemy.x
+  local player = State.player
+  local x_diff = player.x - enemy.x
 
   if (enemy.move_timer < 0) then
-    local y_diff = State.player.y - enemy.y
+    local y_diff = player.y - enemy.y
     local x_diff_mag = math.abs(x_diff)
 
     -- move towards the player vertically
@@ -20,8 +21,12 @@ local function update_enemy(enemy, dt)
     -- face and move towards the player horizontally...
     enemy.dir = x_diff > 0 and 1 or -1
     -- ...except if "too close" to the player, then run away instead
-    if (x_diff_mag < ENEMY_RUN_FROM_PLAYER_DISTANCE) then
-      enemy.dir *= -1
+    if x_diff_mag < ENEMY_RUN_FROM_PLAYER_DISTANCE then
+      -- ...provided there's room to move away
+      local breathing_space = math.abs(player.x - (x_diff < 0 and MAX_X or MIN_X))
+      if breathing_space > ENEMY_RUN_FROM_PLAYER_DISTANCE then
+        enemy.dir *= -1
+      end
     end
     enemy.move_x = enemy.dir * ENEMY_SPEED
 
