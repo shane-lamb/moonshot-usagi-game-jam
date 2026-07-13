@@ -2,9 +2,10 @@ local bullet = require "bullet"
 
 local function update_enemy(enemy, dt)
   if (enemy.hit) then
+    sfx.play(SFX_EXPLOSION)
     return true
   end
-  
+
   enemy.move_timer -= dt
 
   local x_diff = State.player.x - enemy.x

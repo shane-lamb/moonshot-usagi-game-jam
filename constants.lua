@@ -33,3 +33,8 @@ SPAWNER_DELAY = 2
 
 CHAR_WIDTH = 6
 CHAR_HEIGHT = 10
+
+SFX_EXPLOSION = "explosion"
+SFX_HIT = "hit"
+SFX_SHOOT = "shoot"
+SFX_WAVE_START = "wave_start"

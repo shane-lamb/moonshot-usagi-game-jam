@@ -15,6 +15,7 @@ local function init()
     bullets = {},
     spawn_timer = SPAWNER_INITIAL_DELAY
   }
+  sfx.play(SFX_WAVE_START)
 end
 
 local function update_spawner(dt)
