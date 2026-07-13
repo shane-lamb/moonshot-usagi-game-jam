@@ -17,6 +17,7 @@ local function text_multiline_center(text_lines, color)
 end
 
 return {
+  text_center_horizontal = text_center_horizontal,
   text_center = text_center,
   text_multiline_center = text_multiline_center
 }

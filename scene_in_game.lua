@@ -1,44 +1,20 @@
+local util = require "util"
 
 local update_player = (require "player").update
 local create_player = (require "player").create
+local update_spawner = (require "spawner").update
+local create_spawner = (require "spawner").create
 local update_bullets = (require "bullet").update
 local update_enemies = (require "enemy").update
 
 local function init()
   State = {
+    spawner = create_spawner(),
     player = create_player(),
     enemies = {},
-    bullets = {},
-    spawn_timer = SPAWNER_INITIAL_DELAY
+    bullets = {}
   }
   sfx.play(SFX_WAVE_START)
-end
-
-local function update_spawner(dt)
-  State.spawn_timer -= dt
-  
-  if State.spawn_timer > 0 then
-    return
-  end
-
-  -- 50% chance of spawning on left or right edge of screen
-  local x = MIN_X
-  if math.random() < 0.5 then
-    x = MAX_X
-  end
-
-  table.insert(State.enemies, {
-    x = x,
-    y = math.random(MIN_Y, MAX_Y),
-    dir = -1,
-    type = TYPE_ENEMY,
-    shoot_timer = 0.5 + math.random() / 2,
-    move_timer = 0,
-    move_x = 0,
-    move_y = 0
-  })
-  
-  State.spawn_timer = SPAWNER_DELAY
 end
 
 local function update(dt)
@@ -71,6 +47,13 @@ end
 
 local function draw()
   gfx.clear(gfx.COLOR_LIGHT_GRAY)
+
+  gfx.rect_fill(0, 0, GAME_WIDTH, SPRITE_SIZE * 2, gfx.COLOR_BLACK)
+  util.text_center_horizontal("WAVE " .. State.spawner.wave, 1, gfx.COLOR_WHITE)
+
+  for i = 0, GAME_WIDTH - SPRITE_SIZE, SPRITE_SIZE do
+    gfx.spr(7, i, SPRITE_SIZE)
+  end
 
   local entities = get_entities_sorted()
 
