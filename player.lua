@@ -6,7 +6,7 @@ local function create()
     y = MID_Y,
     dir = 1,
     type = TYPE_PLAYER,
-    reload_timer = 0
+    reload_timer = PLAYER_RELOAD_TIME / 2
   }
 end
 
