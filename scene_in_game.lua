@@ -59,7 +59,7 @@ local function draw()
 
   for _, entity in ipairs(entities) do
     if (entity.type == TYPE_BULLET) then
-      gfx.circ_fill(entity.x + HALF_SPRITE_SIZE, entity.y + HALF_SPRITE_SIZE, 1, gfx.COLOR_ORANGE)
+      gfx.circ_fill(entity.x + HALF_SPRITE_SIZE, entity.y + HALF_SPRITE_SIZE, 1, gfx.COLOR_RED)
     elseif (entity.type == TYPE_ENEMY) then
       gfx.spr_ex(2, entity.x, entity.y, entity.dir == 1, false, 0, gfx.COLOR_TRUE_WHITE, 1.0)
     elseif (entity.type == TYPE_PLAYER) then
