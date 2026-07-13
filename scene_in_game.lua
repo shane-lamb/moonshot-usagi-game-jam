@@ -1,16 +1,12 @@
 
 local update_player = (require "player").update
+local create_player = (require "player").create
 local update_bullets = (require "bullet").update
 local update_enemies = (require "enemy").update
 
 local function init()
   State = {
-    player = {
-      x = MID_X,
-      y = MID_Y,
-      dir = 1,
-      type = TYPE_PLAYER
-    },
+    player = create_player(),
     enemies = {},
     bullets = {},
     spawn_timer = SPAWNER_INITIAL_DELAY

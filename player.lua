@@ -1,29 +1,44 @@
 local bullet = require "bullet"
 
+local function create()
+  return {
+    x = MID_X,
+    y = MID_Y,
+    dir = 1,
+    type = TYPE_PLAYER,
+    reload_timer = 0
+  }
+end
+
 local function update(dt)
+  local player = State.player
+
   if input.held(input.LEFT) then
-    State.player.x -= dt * PLAYER_SPEED
-    State.player.dir = -1
+    player.x -= dt * PLAYER_SPEED
+    player.dir = -1
   end
   if input.held(input.RIGHT) then
-    State.player.x += dt * PLAYER_SPEED
-    State.player.dir = 1
+    player.x += dt * PLAYER_SPEED
+    player.dir = 1
   end
   if input.held(input.UP) then
-    State.player.y -= dt * PLAYER_SPEED
+    player.y -= dt * PLAYER_SPEED
   end
   if input.held(input.DOWN) then
-    State.player.y += dt * PLAYER_SPEED
+    player.y += dt * PLAYER_SPEED
   end
 
-  State.player.x = util.clamp(State.player.x, MIN_X, MAX_X)
-  State.player.y = util.clamp(State.player.y, MIN_Y, MAX_Y)
+  player.x = util.clamp(player.x, MIN_X, MAX_X)
+  player.y = util.clamp(player.y, MIN_Y, MAX_Y)
 
-  if input.pressed(input.BTN1) then
-    bullet.shoot_from_entity(State.player)
+  player.reload_timer -= dt
+  if input.held(input.BTN1) and player.reload_timer < 0 then
+    bullet.shoot_from_entity(player)
+    player.reload_timer = PLAYER_RELOAD_TIME
   end
 end
 
 return {
-  update = update
+  update = update,
+  create = create
 }
