@@ -29,9 +29,6 @@ ENEMY_MIN_MOVE_TIME = 0.5 -- max move time is this plus 1 second
 BULLET_SPEED = PLAYER_SPEED * 2
 BULLET_LIFETIME = 2.5
 
-SPAWNER_INITIAL_DELAY = 0.5
-SPAWNER_DELAY = 2
-
 CHAR_WIDTH = 6
 CHAR_HEIGHT = 10
 
@@ -39,3 +36,4 @@ SFX_EXPLOSION = "explosion"
 SFX_HIT = "hit"
 SFX_SHOOT = "shoot"
 SFX_WAVE_START = "wave_start"
+SFX_BEEP = "beep"
