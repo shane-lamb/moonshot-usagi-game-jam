@@ -1,7 +1,8 @@
 local function shoot_from_entity(entity)
   sfx.play(SFX_SHOOT)
   table.insert(State.bullets, {
-    x = entity.x + entity.dir * HALF_SPRITE_SIZE,
+    -- minus 1 to half sprite size makes bullet start a little closer to shooter
+    x = entity.x + entity.dir * (HALF_SPRITE_SIZE - 1),
     y = entity.y,
     time_left = BULLET_LIFETIME,
     dir = entity.dir,
