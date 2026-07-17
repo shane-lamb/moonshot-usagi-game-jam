@@ -33,7 +33,7 @@ local function spawn_enemy(single_side)
     y = math.random(MIN_Y, MAX_Y),
     dir = -1,
     type = TYPE_ENEMY,
-    shoot_timer = 0.5 + math.random() / 2,
+    shoot_timer = math.random(),
     move_timer = 0,
     move_x = 0,
     move_y = 0
