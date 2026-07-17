@@ -29,7 +29,7 @@ local waves = {
 
 local function spawn_enemy(single_side)
   table.insert(State.enemies, {
-    x = single_side == SIDE_LEFT and MIN_X or MAX_X,
+    x = single_side == SIDE_LEFT and ENEMY_MIN_X or ENEMY_MAX_X,
     y = math.random(MIN_Y, MAX_Y),
     dir = -1,
     type = TYPE_ENEMY,

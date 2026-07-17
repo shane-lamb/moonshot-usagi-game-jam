@@ -23,7 +23,7 @@ local function update_enemy(enemy, dt)
     -- ...except if "too close" to the player, then run away instead
     if x_diff_mag < ENEMY_RUN_FROM_PLAYER_DISTANCE then
       -- ...provided there's room to move away
-      local breathing_space = math.abs(player.x - (x_diff < 0 and MAX_X or MIN_X))
+      local breathing_space = math.abs(player.x - (x_diff < 0 and ENEMY_MAX_X or ENEMY_MIN_X))
       if breathing_space > ENEMY_RUN_FROM_PLAYER_DISTANCE then
         enemy.dir *= -1
       end
@@ -36,7 +36,7 @@ local function update_enemy(enemy, dt)
   enemy.x += enemy.move_x * dt
   enemy.y += enemy.move_y * dt
   enemy.y = util.clamp(enemy.y, MIN_Y, MAX_Y)
-  enemy.x = util.clamp(enemy.x, MIN_X, MAX_X)
+  enemy.x = util.clamp(enemy.x, ENEMY_MIN_X, ENEMY_MAX_X)
 
   local facing_player = (x_diff > 0) == (enemy.dir > 0)
   -- since shoot timer only decreases when facing player,
