@@ -1,8 +1,10 @@
 local bullet = require "bullet"
+local ParticleManager = require "particle_manager"
 
 local function update_enemy(enemy, dt)
   if (enemy.hit) then
     sfx.play(SFX_EXPLOSION)
+    ParticleManager.explosion(enemy.x + HALF_SPRITE_SIZE, enemy.y + HALF_SPRITE_SIZE)
     return true
   end
 

@@ -1,4 +1,5 @@
 local util = require "util"
+local ParticleManager = require "particle_manager"
 
 local update_player = (require "player").update
 local create_player = (require "player").create
@@ -13,7 +14,8 @@ local function init()
     player = create_player(),
     enemies = {},
     bullets = {},
-    time = 0
+    time = 0,
+    particles = {}
   }
   sfx.play(SFX_WAVE_START)
 end
@@ -24,6 +26,7 @@ local function update(dt)
   update_bullets(dt)
   update_player(dt)
   update_enemies(dt)
+  ParticleManager.update(dt)
 end
 
 local function get_entities_sorted()
@@ -74,6 +77,8 @@ local function draw()
       gfx.spr_ex(spr_index, entity.x, entity.y, entity.dir == 1, false, 0, gfx.COLOR_TRUE_WHITE, 1.0)  
     end
   end
+
+  ParticleManager.draw()
 end
 
 return {
