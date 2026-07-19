@@ -6,26 +6,32 @@ local function create()
     y = MID_Y,
     dir = 1,
     type = TYPE_PLAYER,
-    reload_timer = PLAYER_RELOAD_TIME / 2
+    reload_timer = PLAYER_RELOAD_TIME / 2,
+    moving = false
   }
 end
 
 local function update(dt)
   local player = State.player
 
+  player.moving = false
   if input.held(input.LEFT) then
     player.x -= dt * PLAYER_SPEED
+    player.moving = true
     player.dir = -1
   end
   if input.held(input.RIGHT) then
     player.x += dt * PLAYER_SPEED
+    player.moving = true
     player.dir = 1
   end
   if input.held(input.UP) then
     player.y -= dt * PLAYER_SPEED
+    player.moving = true
   end
   if input.held(input.DOWN) then
     player.y += dt * PLAYER_SPEED
+    player.moving = true
   end
 
   player.x = util.clamp(player.x, MIN_X, MAX_X)

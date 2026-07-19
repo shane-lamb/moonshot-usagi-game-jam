@@ -29,8 +29,8 @@ local function draw()
 
   util.text_multiline_center(text, gfx.COLOR_WHITE)
 
-  gfx.spr(1, 35, 14)
-  gfx.spr(1, 106, 14)
+  gfx.spr(SPRITE_MOON, 35, 14)
+  gfx.spr(SPRITE_MOON, 106, 14)
 end
 
 return {

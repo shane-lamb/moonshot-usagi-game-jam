@@ -12,12 +12,14 @@ local function init()
     spawner = create_spawner(),
     player = create_player(),
     enemies = {},
-    bullets = {}
+    bullets = {},
+    time = 0
   }
   sfx.play(SFX_WAVE_START)
 end
 
 local function update(dt)
+  State.time += dt
   update_spawner(dt)
   update_bullets(dt)
   update_player(dt)
@@ -52,18 +54,24 @@ local function draw()
   util.text_center_horizontal("WAVE " .. State.spawner.wave, 1, gfx.COLOR_WHITE)
 
   for i = 0, GAME_WIDTH - SPRITE_SIZE, SPRITE_SIZE do
-    gfx.spr(7, i, SPRITE_SIZE)
+    gfx.spr(SPRITE_WALL, i, SPRITE_SIZE)
   end
 
   local entities = get_entities_sorted()
+
+  local sprite_offset = math.floor((State.time * 7) % 4)
 
   for _, entity in ipairs(entities) do
     if (entity.type == TYPE_BULLET) then
       gfx.circ_fill(entity.x + HALF_SPRITE_SIZE, entity.y + HALF_SPRITE_SIZE, 1, gfx.COLOR_RED)
     elseif (entity.type == TYPE_ENEMY) then
-      gfx.spr_ex(2, entity.x, entity.y, entity.dir == 1, false, 0, gfx.COLOR_TRUE_WHITE, 1.0)
+      gfx.spr_ex(SPRITE_ENEMY + sprite_offset, entity.x, entity.y, entity.dir == 1, false, 0, gfx.COLOR_TRUE_WHITE, 1.0)
     elseif (entity.type == TYPE_PLAYER) then
-      gfx.spr_ex(6, entity.x, entity.y, entity.dir == 1, false, 0, gfx.COLOR_TRUE_WHITE, 1.0)  
+      local spr_index = SPRITE_PLAYER
+      if entity.moving then
+        spr_index += sprite_offset
+      end
+      gfx.spr_ex(spr_index, entity.x, entity.y, entity.dir == 1, false, 0, gfx.COLOR_TRUE_WHITE, 1.0)  
     end
   end
 end

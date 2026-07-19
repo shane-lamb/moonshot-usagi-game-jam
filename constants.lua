@@ -45,3 +45,8 @@ SFX_SHOOT = "shoot"
 SFX_WAVE_START = "wave_start"
 SFX_BEEP = "beep"
 SFX_WIN = "win"
+
+SPRITE_ENEMY = 1
+SPRITE_PLAYER = 5
+SPRITE_WALL = 13
+SPRITE_MOON = 9
