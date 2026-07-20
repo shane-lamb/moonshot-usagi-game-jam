@@ -53,24 +53,28 @@ end
 local function draw()
   gfx.clear(gfx.COLOR_LIGHT_GRAY)
 
-  gfx.rect_fill(0, 0, GAME_WIDTH, SPRITE_SIZE * 2, gfx.COLOR_BLACK)
+  gfx.rect_fill(0, 0, GAME_WIDTH, SPRITE_SIZE, gfx.COLOR_BLACK)
   util.text_center_horizontal("WAVE " .. State.spawner.wave, 1, gfx.COLOR_WHITE)
-
-  for i = 0, GAME_WIDTH - SPRITE_SIZE, SPRITE_SIZE do
-    gfx.spr(SPRITE_WALL, i, SPRITE_SIZE)
-  end
-
-  local entities = get_entities_sorted()
 
   local sprite_offset = math.floor((State.time * 7) % 4)
 
+  for i = 0, GAME_WIDTH - SPRITE_SIZE, SPRITE_SIZE do
+    gfx.spr(SPR_WALL + sprite_offset, i, SPRITE_SIZE)
+  end
+
+  local entities = get_entities_sorted()
   for _, entity in ipairs(entities) do
-    if (entity.type == TYPE_BULLET) then
-      gfx.circ_fill(entity.x + HALF_SPRITE_SIZE, entity.y + HALF_SPRITE_SIZE, 1, gfx.COLOR_RED)
-    elseif (entity.type == TYPE_ENEMY) then
-      gfx.spr_ex(SPRITE_ENEMY + sprite_offset, entity.x, entity.y, entity.dir == 1, false, 0, gfx.COLOR_TRUE_WHITE, 1.0)
-    elseif (entity.type == TYPE_PLAYER) then
-      local spr_index = SPRITE_PLAYER
+    if entity.type == TYPE_BULLET then
+      if entity.hurt_enemy then
+        gfx.spr_ex(SPR_PLAYER_BULLET + sprite_offset, entity.x, entity.y, entity.dir == 1, false, 0, gfx.COLOR_TRUE_WHITE, 1.0)
+      else
+        gfx.spr_ex(SPR_ENEMY_BULLET + sprite_offset, entity.x, entity.y, entity.dir == 1, false, 0, gfx.COLOR_TRUE_WHITE, 1.0)
+      end
+      -- gfx.circ_fill(entity.x + HALF_SPRITE_SIZE, entity.y + HALF_SPRITE_SIZE, 1, gfx.COLOR_RED)
+    elseif entity.type == TYPE_ENEMY then
+      gfx.spr_ex(SPR_ENEMY + sprite_offset, entity.x, entity.y, entity.dir == 1, false, 0, gfx.COLOR_TRUE_WHITE, 1.0)
+    elseif entity.type == TYPE_PLAYER then
+      local spr_index = SPR_PLAYER
       if entity.moving then
         spr_index += sprite_offset
       end
