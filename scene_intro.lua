@@ -6,6 +6,7 @@ local function init()
   State = {
     timer = 0
   }
+  music.loop("intro")
 end
 
 local function update(dt)

@@ -18,6 +18,7 @@ local function init()
     particles = {}
   }
   sfx.play(SFX_WAVE_START)
+  music.loop("ingame")
 end
 
 local function update(dt)

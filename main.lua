@@ -24,6 +24,7 @@ end
 function _update(dt)
   local scene_to_init = State.scene_to_init
   if scene_to_init then
+    music.stop()
     scenes[scene_to_init].init()
     State.scene = scene_to_init
   end

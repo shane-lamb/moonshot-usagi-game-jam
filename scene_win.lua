@@ -6,7 +6,7 @@ local function init()
   State = {
     timer = 0
   }
-  sfx.play(SFX_WIN)
+  music.loop("win")
 end
 
 local function update(dt)
