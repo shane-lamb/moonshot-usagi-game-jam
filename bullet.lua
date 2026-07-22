@@ -40,6 +40,7 @@ local function update_bullet(bullet, dt)
   target_rect.y = State.player.y + QUARTER_SPRITE_SIZE
   if util.point_in_rect(bullet_point, target_rect) then
     sfx.play(SFX_HIT)
+    DeathCount += 1
     State.scene_to_init = SCENE_GAME_OVER
     State.scene_init_args = {
       lives_left = State.lives_left - 1,

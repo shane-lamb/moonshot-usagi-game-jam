@@ -58,10 +58,16 @@ local function draw()
   gfx.clear(gfx.COLOR_LIGHT_GRAY)
 
   gfx.rect_fill(0, 0, GAME_WIDTH, SPRITE_SIZE, gfx.COLOR_BLACK)
+  -- wave #
   util.text_center_horizontal("WAVE " .. State.spawner.wave, 1, gfx.COLOR_WHITE)
+  -- lives left
   for i = 1, State.lives_left, 1 do
     gfx.spr(SPR_HEART, GAME_WIDTH - 4 - (SPRITE_SIZE - 5) * i, 0)
   end
+  -- death count
+  gfx.spr(SPR_SKULL, 4, 0)
+  gfx.text("" .. DeathCount, 17, 1, gfx.COLOR_WHITE)
+
 
   local sprite_offset = math.floor((State.time * 7) % 4)
 

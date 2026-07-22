@@ -19,6 +19,7 @@ function _init()
   State = {
     scene_to_init = SCENE_INTRO
   }
+  DeathCount = 0
 end
 
 function _update(dt)
