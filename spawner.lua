@@ -53,9 +53,9 @@ local function spawn_for_step(step)
   end
 end
 
-local function create()
+local function create(wave)
   return {
-    wave = 1,
+    wave = wave,
     step = 1,
     count = 0,
     timer = 0,

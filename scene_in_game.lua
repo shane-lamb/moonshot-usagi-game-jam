@@ -8,14 +8,17 @@ local create_spawner = (require "spawner").create
 local update_bullets = (require "bullet").update
 local update_enemies = (require "enemy").update
 
-local function init()
+local function init(args)
+  local wave = args and args.wave or 1
+  local lives_left = args and args.lives_left or 3
   State = {
-    spawner = create_spawner(),
+    spawner = create_spawner(wave),
     player = create_player(),
     enemies = {},
     bullets = {},
     time = 0,
-    particles = {}
+    particles = {},
+    lives_left = lives_left
   }
   sfx.play(SFX_WAVE_START)
   music.loop("ingame")
@@ -56,6 +59,9 @@ local function draw()
 
   gfx.rect_fill(0, 0, GAME_WIDTH, SPRITE_SIZE, gfx.COLOR_BLACK)
   util.text_center_horizontal("WAVE " .. State.spawner.wave, 1, gfx.COLOR_WHITE)
+  for i = 1, State.lives_left, 1 do
+    gfx.spr(SPR_HEART, GAME_WIDTH - 4 - (SPRITE_SIZE - 5) * i, 0)
+  end
 
   local sprite_offset = math.floor((State.time * 7) % 4)
 
